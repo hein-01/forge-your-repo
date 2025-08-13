@@ -219,9 +219,9 @@ const PopularBusinesses = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-2 right-2 px-2 py-3 h-auto w-auto bg-white/80 hover:bg-white"
+                  className="absolute top-2 right-2 px-2 py-4 h-auto w-auto bg-white/80 hover:bg-white"
                 >
-                  <Bookmark className="w-4 h-6 text-gray-600" />
+                  <Bookmark className="w-4 h-8 text-gray-600" />
                 </Button>
               </div>
               
