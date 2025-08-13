@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import BusinessDetail from "./pages/BusinessDetail";
 import BusinessDirectory from "./pages/BusinessDirectory";
+import FindShops from "./pages/FindShops";
 import AddBusiness from "./pages/AddBusiness";
 import Auth from "./pages/Auth";
 
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/businesses" element={<BusinessDirectory />} />
+          <Route path="/find-shops" element={<FindShops />} />
           <Route path="/business/:id" element={<BusinessDetail />} />
           <Route path="/add-business" element={<AddBusiness />} />
           <Route path="/auth/signin" element={<Auth />} />

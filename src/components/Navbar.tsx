@@ -50,7 +50,7 @@ export const Navbar = () => {
                 🏠 Home
               </Link>
               <Link
-                to="/businesses"
+                to="/find-shops"
                 className="text-muted-foreground hover:text-foreground font-medium"
               >
                 🏪 Find Shops
