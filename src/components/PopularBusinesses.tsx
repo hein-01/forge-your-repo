@@ -100,10 +100,17 @@ const PopularBusinesses = () => {
                   </div>
                   
                   <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <img 
+                        src={business.image_url || "https://images.unsplash.com/photo-1592659762303-90081d34b277?w=40&h=40&fit=crop"} 
+                        alt="Business logo" 
+                        className="w-10 h-10 rounded-md object-cover"
+                      />
+                      <BadgeCheck className="w-4 h-4 text-white absolute -top-1 -right-1 rounded-full bg-primary" />
+                    </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2 flex items-center gap-1">
+                      <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2">
                         {business.name}
-                        <BadgeCheck className="w-4 h-4 text-primary flex-shrink-0" />
                       </h3>
                     </div>
                   </div>
