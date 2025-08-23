@@ -77,7 +77,7 @@ const PopularBusinesses = () => {
             <Card key={business.id} className="group w-[320px] h-[455px] flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 mx-[5px] md:mx-[10px] mb-4">
               <div className="relative overflow-hidden rounded-t-lg">
                 <img
-                  src={business.image_url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=320&h=200&fit=crop"}
+                  src={business.image_url ? `${business.image_url}?width=320&height=200&resize=cover` : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=320&h=200&fit=crop"}
                   alt={`${business.name} products`}
                   className="w-[320px] h-[200px] object-cover transition-transform duration-300 hover:scale-105"
                 />
