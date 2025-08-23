@@ -230,6 +230,38 @@ export type Database = {
         Args: { user_email: string }
         Returns: boolean
       }
+      get_public_business_by_id: {
+        Args: { business_id: string }
+        Returns: {
+          category: string
+          city: string
+          description: string
+          id: string
+          image_url: string
+          name: string
+          rating: number
+          state: string
+          website: string
+        }[]
+      }
+      get_public_businesses: {
+        Args: {
+          category_filter?: string
+          location_filter?: string
+          search_term?: string
+        }
+        Returns: {
+          category: string
+          city: string
+          description: string
+          id: string
+          image_url: string
+          name: string
+          rating: number
+          state: string
+          website: string
+        }[]
+      }
       log_admin_login_attempt: {
         Args: { attempt_success: boolean; user_email: string }
         Returns: undefined
