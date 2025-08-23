@@ -77,9 +77,9 @@ const PopularBusinesses = () => {
             <Card key={business.id} className="group w-[320px] h-[455px] flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 mx-[5px] md:mx-[10px] mb-4">
               <div className="relative overflow-hidden rounded-t-lg">
                 <img
-                  src={business.image_url || "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=200&fit=crop"}
-                  alt={business.name}
-                  className="w-[320px] h-[220px] object-cover transition-transform duration-300 hover:scale-105"
+                  src={business.image_url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=320&h=200&fit=crop"}
+                  alt={`${business.name} products`}
+                  className="w-[320px] h-[200px] object-cover transition-transform duration-300 hover:scale-105"
                 />
                 <Button
                   variant="ghost"
@@ -100,17 +100,10 @@ const PopularBusinesses = () => {
                   </div>
                   
                   <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <img 
-                        src={business.image_url || "https://images.unsplash.com/photo-1592659762303-90081d34b277?w=20&h=20&fit=crop"} 
-                        alt="Business logo" 
-                        className="w-10 h-10 rounded-md object-cover"
-                      />
-                      <BadgeCheck className="w-4 h-4 text-white absolute -top-1 -right-1 rounded-full bg-primary" />
-                    </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2">
+                      <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2 flex items-center gap-1">
                         {business.name}
+                        <BadgeCheck className="w-4 h-4 text-primary flex-shrink-0" />
                       </h3>
                     </div>
                   </div>
