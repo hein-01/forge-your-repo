@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
-import { BusinessCard } from "@/components/BusinessCard";
+import { PopularBusinessCard } from "@/components/PopularBusinessCard";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   User, 
@@ -162,7 +162,7 @@ export default function UserDashboard() {
             ) : userBusinesses.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {userBusinesses.map((business) => (
-                  <BusinessCard key={business.id} business={business} />
+                  <PopularBusinessCard key={business.id} business={business} />
                 ))}
               </div>
             ) : (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { BusinessCard } from "@/components/BusinessCard";
+import { PopularBusinessCard } from "@/components/PopularBusinessCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
@@ -138,7 +138,7 @@ export default function FindShops() {
             ))
           ) : businesses.length > 0 ? (
             businesses.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+              <PopularBusinessCard key={business.id} business={business} />
             ))
           ) : (
             <div className="text-center py-12">

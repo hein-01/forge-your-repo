@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { BusinessCard } from "@/components/BusinessCard";
+import { PopularBusinessCard } from "@/components/PopularBusinessCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { Navbar } from "@/components/Navbar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -145,7 +145,7 @@ export default function BusinessDirectory() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {businesses.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+              <PopularBusinessCard key={business.id} business={business} />
             ))}
           </div>
         )}
