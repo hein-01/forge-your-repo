@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
+import { BusinessCard } from "@/components/BusinessCard";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   User, 
   Mail, 
@@ -43,6 +45,32 @@ export default function UserDashboard() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = React.useState("dashboard");
+  const [userBusinesses, setUserBusinesses] = React.useState([]);
+  const [loadingBusinesses, setLoadingBusinesses] = React.useState(false);
+
+  const fetchUserBusinesses = async () => {
+    if (!user?.id) return;
+    
+    setLoadingBusinesses(true);
+    try {
+      const { data, error } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('owner_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching user businesses:', error);
+        return;
+      }
+      
+      setUserBusinesses(data || []);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoadingBusinesses(false);
+    }
+  };
 
   const handleSidebarAction = (action: string) => {
     setActiveSection(action);
@@ -51,6 +79,8 @@ export default function UserDashboard() {
       navigate("/list-business");
     } else if (action === "website-pos") {
       navigate("/list-&-get-pos-website");
+    } else if (action === "listings") {
+      fetchUserBusinesses();
     }
   };
 
@@ -125,20 +155,32 @@ export default function UserDashboard() {
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">My Business Listings</h2>
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground text-center py-8">
-                  No business listings yet. 
-                  <Button 
-                    variant="link" 
-                    className="ml-2 p-0 h-auto"
-                    onClick={() => navigate("/add-business")}
-                  >
-                    Create your first listing
-                  </Button>
-                </p>
-              </CardContent>
-            </Card>
+            {loadingBusinesses ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Loading your businesses...</p>
+              </div>
+            ) : userBusinesses.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {userBusinesses.map((business) => (
+                  <BusinessCard key={business.id} business={business} />
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-muted-foreground text-center py-8">
+                    No business listings yet. 
+                    <Button 
+                      variant="link" 
+                      className="ml-2 p-0 h-auto"
+                      onClick={() => navigate("/list-business")}
+                    >
+                      Create your first listing
+                    </Button>
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         );
 
