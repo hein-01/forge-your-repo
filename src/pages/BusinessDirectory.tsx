@@ -140,12 +140,16 @@ export default function BusinessDirectory() {
   };
 
   const BusinessSkeleton = () => (
-    <div className="space-y-4">
-      <Skeleton className="h-48 w-full" />
-      <div className="space-y-2">
+    <div className="w-[280px]">
+      <Skeleton className="h-[280px] w-full rounded-t-lg" />
+      <div className="p-4 space-y-2">
         <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-2/3" />
+        <div className="flex justify-between items-center mt-4">
+          <Skeleton className="h-8 w-20" />
+          <Skeleton className="h-8 w-16" />
+        </div>
       </div>
     </div>
   );
@@ -169,7 +173,7 @@ export default function BusinessDirectory() {
         />
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-wrap justify-center gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
               <BusinessSkeleton key={i} />
             ))}
@@ -183,7 +187,7 @@ export default function BusinessDirectory() {
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex flex-wrap justify-center gap-5 max-w-[580px] md:max-w-[580px] lg:max-w-[900px] mx-auto">
               {businesses.map((business) => (
                 <PopularBusinessCard key={business.id} business={business} />
               ))}
