@@ -34,10 +34,15 @@ export default function BusinessDirectory() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [locationFilter, setLocationFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const { toast } = useToast();
+
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     fetchCategories();
@@ -45,7 +50,9 @@ export default function BusinessDirectory() {
   }, []);
 
   useEffect(() => {
-    fetchBusinesses();
+    setCurrentPage(0);
+    setHasMore(true);
+    fetchBusinesses(true);
   }, [searchTerm, selectedCategory, locationFilter]);
 
   const fetchCategories = async () => {
@@ -62,13 +69,21 @@ export default function BusinessDirectory() {
     }
   };
 
-  const fetchBusinesses = async () => {
+  const fetchBusinesses = async (reset = false) => {
     try {
-      setLoading(true);
+      if (reset) {
+        setLoading(true);
+        setBusinesses([]);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const page = reset ? 0 : currentPage;
       let query = supabase
         .from("businesses")
         .select("*")
-        .order("rating", { ascending: false });
+        .order("rating", { ascending: false })
+        .range(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE - 1);
 
       // Apply enhanced search filter with synonyms
       if (searchTerm) {
@@ -93,7 +108,18 @@ export default function BusinessDirectory() {
       const { data, error } = await query;
 
       if (error) throw error;
-      setBusinesses(data || []);
+      
+      const newBusinesses = data || [];
+      
+      if (reset) {
+        setBusinesses(newBusinesses);
+        setCurrentPage(0);
+      } else {
+        setBusinesses(prev => [...prev, ...newBusinesses]);
+        setCurrentPage(page + 1);
+      }
+      
+      setHasMore(newBusinesses.length === ITEMS_PER_PAGE);
     } catch (error) {
       console.error("Error fetching businesses:", error);
       toast({
@@ -103,6 +129,13 @@ export default function BusinessDirectory() {
       });
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      fetchBusinesses(false);
     }
   };
 
@@ -149,10 +182,24 @@ export default function BusinessDirectory() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {businesses.map((business) => (
-              <PopularBusinessCard key={business.id} business={business} />
-            ))}
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {businesses.map((business) => (
+                <PopularBusinessCard key={business.id} business={business} />
+              ))}
+            </div>
+            
+            {hasMore && (
+              <div className="flex justify-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {loadingMore ? "Loading..." : "Load More"}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </main>
