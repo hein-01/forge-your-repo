@@ -5,6 +5,7 @@ import { SearchFilters } from "@/components/SearchFilters";
 import { Navbar } from "@/components/Navbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { expandSearchTerms, normalizeCategoryName } from "@/utils/synonymDictionary";
 
 interface Business {
   id: string;
@@ -69,14 +70,19 @@ export default function BusinessDirectory() {
         .select("*")
         .order("rating", { ascending: false });
 
-      // Apply search filter
+      // Apply enhanced search filter with synonyms
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        const expandedTerms = expandSearchTerms(searchTerm);
+        const searchQuery = expandedTerms
+          .map(term => `name.ilike.%${term}%,description.ilike.%${term}%,products_catalog.ilike.%${term}%`)
+          .join(',');
+        query = query.or(searchQuery);
       }
 
-      // Apply category filter
+      // Apply category filter with normalization
       if (selectedCategory !== "all") {
-        query = query.eq("category", selectedCategory);
+        const normalizedCategory = normalizeCategoryName(selectedCategory);
+        query = query.eq("category", normalizedCategory);
       }
 
       // Apply location filter

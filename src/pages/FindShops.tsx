@@ -6,6 +6,7 @@ import { SearchFilters } from "@/components/SearchFilters";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { expandSearchTerms, normalizeCategoryName } from "@/utils/synonymDictionary";
 
 interface Business {
   id: string;
@@ -71,14 +72,22 @@ export default function FindShops() {
         .select("*")
         .order("rating", { ascending: false });
 
+      // Apply enhanced search filter with synonyms
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        const expandedTerms = expandSearchTerms(searchTerm);
+        const searchQuery = expandedTerms
+          .map(term => `name.ilike.%${term}%,description.ilike.%${term}%,products_catalog.ilike.%${term}%`)
+          .join(',');
+        query = query.or(searchQuery);
       }
 
+      // Apply category filter with normalization
       if (selectedCategory !== "all") {
-        query = query.eq("category", selectedCategory);
+        const normalizedCategory = normalizeCategoryName(selectedCategory);
+        query = query.eq("category", normalizedCategory);
       }
 
+      // Apply location filter
       if (locationFilter) {
         query = query.or(`city.ilike.%${locationFilter}%,state.ilike.%${locationFilter}%`);
       }
